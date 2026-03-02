@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { StatusAnimation } from '@/components/StatusAnimation';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, Zap, Download, Users, Clock, MapPin, Copy, Check } from 'lucide-react';
+import { GraduationCap, LogOut, Zap, Download, Users, Clock, Copy, Check } from 'lucide-react';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
@@ -57,17 +57,14 @@ const TeacherDashboard = () => {
     return () => clearInterval(interval);
   }, [fetchRecords]);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     setLoading(true);
     try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
-      });
-      const newSession = createSession(user!.id, pos.coords.latitude, pos.coords.longitude);
+      const newSession = createSession(user!.id);
       setSession(newSession);
       setStatus({ type: 'success', message: 'Session created! Share the code with your students.' });
     } catch {
-      setStatus({ type: 'error', message: 'Could not get GPS location. Please enable location services.' });
+      setStatus({ type: 'error', message: 'Could not create session. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -141,11 +138,6 @@ const TeacherDashboard = () => {
                       {copied ? <Check className="h-5 w-5 text-success" /> : <Copy className="h-5 w-5" />}
                     </Button>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center">
-                  <MapPin className="h-3 w-3" />
-                  GPS: {session.latitude.toFixed(4)}, {session.longitude.toFixed(4)}
                 </div>
               </div>
             ) : (
