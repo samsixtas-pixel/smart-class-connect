@@ -9,7 +9,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { GraduationCap, LogOut, Send, MapPin } from 'lucide-react';
+import { GraduationCap, LogOut, Send } from 'lucide-react';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ const StudentDashboard = () => {
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
   const [loading, setLoading] = useState(false);
-  const [gettingLocation, setGettingLocation] = useState(false);
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -25,26 +24,18 @@ const StudentDashboard = () => {
     setUser(u);
   }, [navigate]);
 
-  const handleSign = async () => {
+  const handleSign = () => {
     if (code.length !== 6) {
       setStatus({ type: 'error', message: 'Please enter a valid 6-digit code.' });
       return;
     }
     setLoading(true);
-    setGettingLocation(true);
-
     try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
-      });
-      setGettingLocation(false);
-
-      const result = signAttendance(code, user!.id, user!.name, pos.coords.latitude, pos.coords.longitude);
+      const result = signAttendance(code, user!.id, user!.name);
       setStatus({ type: result.success ? 'success' : 'error', message: result.message });
       if (result.success) setCode('');
     } catch {
-      setGettingLocation(false);
-      setStatus({ type: 'error', message: 'Could not get your location. Please enable GPS.' });
+      setStatus({ type: 'error', message: 'Something went wrong. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -89,11 +80,6 @@ const StudentDashboard = () => {
                 />
               </div>
 
-              {gettingLocation && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 animate-pulse text-primary" /> Getting your location...
-                </div>
-              )}
 
               <StatusAnimation type={status.type} message={status.message} />
 

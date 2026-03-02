@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { GraduationCap, UserPlus, LogIn, ArrowRight, MapPin, Shield, Clock } from 'lucide-react';
+import { GraduationCap, UserPlus, LogIn, ArrowRight, Shield, Clock, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const fadeUp = {
@@ -10,7 +10,7 @@ const fadeUp = {
 };
 
 const features = [
-  { icon: MapPin, title: 'GPS Verified', desc: 'Students must be within 300m to sign attendance.' },
+  { icon: CheckCircle, title: 'Instant Sign-in', desc: 'Students enter a 6-digit code to sign attendance instantly.' },
   { icon: Shield, title: 'Secure Codes', desc: 'Unique 6-digit codes prevent unauthorized access.' },
   { icon: Clock, title: 'Time-Limited', desc: 'Sessions expire after 10 minutes automatically.' },
 ];
@@ -67,7 +67,7 @@ const HomePage = () => {
               animate="visible"
               className="mb-10 text-lg text-muted-foreground md:text-xl"
             >
-              GPS-verified, real-time attendance tracking. Teachers generate codes, students sign in — all from their phones.
+              Real-time attendance tracking. Teachers generate codes, students sign in — all from their phones, anywhere.
             </motion.p>
 
             <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
